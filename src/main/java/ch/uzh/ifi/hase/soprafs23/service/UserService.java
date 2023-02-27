@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -37,6 +38,24 @@ public class UserService {
 
   public List<User> getUsers() {
     return this.userRepository.findAll();
+  }
+
+  public Optional<User> getUser(Long userID){
+      return this.userRepository.findById(userID);
+  }
+
+  public void updateUser(User user){
+      Optional<User> optUserFromDb = userRepository.findById(user.getId());
+
+      if(optUserFromDb.isEmpty())
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User cannot be updated, id: " + user.getId());
+
+      var userFromDb = optUserFromDb.get();
+      userFromDb.setStatus(user.getStatus());
+      userFromDb.setUsername(user.getUsername());
+      userFromDb.setName(user.getName());
+
+      userRepository.save(userFromDb);
   }
 
   public User createUser(User newUser) {
