@@ -54,6 +54,7 @@ public class UserController {
 
     // create user
     User createdUser = userService.createUser(userInput);
+
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
@@ -61,7 +62,7 @@ public class UserController {
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO getUser(@PathVariable long userId) {
+    public UserGetDTO getUserById(@PathVariable long userId) {
         var user = userService.getUser(userId);
 
         if(user.isEmpty())
@@ -71,14 +72,23 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user.get());
     }
 
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO login(@RequestBody UserPostDTO userPostDTO){
+        var user = userService.getUserByUsernameAndName(userPostDTO);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+    }
+
     @PutMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
     public UserGetDTO updateUser(@PathVariable long userId, @RequestBody UserPutDTO userPutDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
-
         userInput.setId(userId);
+
         userService.updateUser(userInput);
 
         // convert internal representation of user back to API
