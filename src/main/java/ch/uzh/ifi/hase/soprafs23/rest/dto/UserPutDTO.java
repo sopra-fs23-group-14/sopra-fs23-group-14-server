@@ -9,6 +9,7 @@ public class UserPutDTO {
     private String username;
     private UserStatus status;
     private Date birthday;
+    private String token;
 
     public String getName() {
         return name;
@@ -40,5 +41,13 @@ public class UserPutDTO {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

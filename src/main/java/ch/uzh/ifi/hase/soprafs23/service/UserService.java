@@ -53,6 +53,9 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User cannot be updated, id: " + user.getId());
 
       var userFromDb = optUserFromDb.get();
+      if(user.getToken() != userFromDb.getToken())
+          throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Tokens do not match");
+
       userFromDb.setStatus(user.getStatus());
       userFromDb.setUsername(user.getUsername());
       userFromDb.setName(user.getName());
